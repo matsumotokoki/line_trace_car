@@ -6,10 +6,10 @@ n_line = []
 t_line = []
 
 n_line.append(lambda x: -10<=x[0]<=10 and -10<=x[1]<=1150)
-n_line.append(lambda x: x[0]<=150 and 1150<=x[1] and 140<=np.linalg.norm(np.array(x)-np.array([150,1150])<=160))
+n_line.append(lambda x: x[0]<=150 and 1150<=x[1] and 140<=np.linalg.norm(np.array(x)-np.array([150,1150]))<=160)
 n_line.append(lambda x: 150<=x[0]<=300 and 1290<=x[1]<=1310)
 n_line.append(lambda x: 300<=x[0]<=890 and 1290<=x[1]<=1310)
-n_line.append(lambda x: 890<=x[0] and 1150<=x[1] and 140<=np.linalg.norm(np.array(x)-np.array([890,1150])<=160))
+n_line.append(lambda x: 890<=x[0] and 1150<=x[1] and 140<=np.linalg.norm(np.array(x)-np.array([890,1150]))<=160)
 n_line.append(lambda x: 1030<=x[0]<=1050 and 1000<=x[1]<=1150)
 n_line.append(lambda x: 1030<=x[0]<=1050 and 900<=x[1]<=1000)
 n_line.append(lambda x: 1030<=x[0]<=1050 and 800<=x[1]<=900)
