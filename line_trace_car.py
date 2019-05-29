@@ -11,9 +11,9 @@ class line_trace_car(object):
     def __init__(self,lines):
         self.lines = lines
         while True:
-            self.pos_x =  np.random.uniform(self.init_pos[0,0],self.init_pos[0,1])
-            self.pos_y =  np.random.uniform(self.init_pos[1,0],self.init_pos[1,1]) - 150
-            self.pos_a =  np.random.uniform(self.init_pos[2,0],self.init_pos[2,1])
+            self.pos_x = np.random.uniform(self.init_pos[0,0],self.init_pos[0,1])
+            self.pos_y = np.random.uniform(self.init_pos[1,0],self.init_pos[1,1]) - 150
+            self.pos_a = np.random.uniform(self.init_pos[2,0],self.init_pos[2,1])
             if any(self.get_sense()):
                 break
         self.mtrL = self.car_order[0]
