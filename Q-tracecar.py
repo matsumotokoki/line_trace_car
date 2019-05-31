@@ -79,6 +79,7 @@ def run():
                     # car.path_plot(plt)
                     # plt.show()
                     plt.clf()
+                    plt.close()
                 break
 
 
