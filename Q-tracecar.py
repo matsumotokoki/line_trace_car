@@ -69,7 +69,7 @@ def run():
                 field.plot_normal_field_line(plt)
                 car.path_plot(plt)
                 plt.draw()
-                plt.pause(0.001)
+                plt.pause(0.0001)
             
             if done:
                 reward_ave = np.hstack((reward_ave[1:],level))
@@ -78,8 +78,8 @@ def run():
                     # field.plot_normal_field_line(plt)
                     # car.path_plot(plt)
                     # plt.show()
-                    plt.clf()
                     plt.close()
+                    plt.clf()
                 break
 
 
