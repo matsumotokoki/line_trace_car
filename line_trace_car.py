@@ -2,7 +2,7 @@ import numpy as np
 from numpy import pi 
 
 class line_trace_car(object):
-    sensors= np.array([[150,22.5],[150,7.5],[150,-7.5],[150,-22.5]])
+    sensors = np.array([[150,22.5],[150,7.5],[150,-7.5],[150,-22.5]])
     tread = 200
     car_order = [0,10]
     init_pos = np.array([[-10,10],[-10,10],[80*pi/180,100*pi/180]])
