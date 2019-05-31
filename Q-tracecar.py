@@ -23,7 +23,7 @@ def decide_action(next_state,episode,q_table):
 
 def update_Qtable(q_table,state,action,reward,next_state):
     gamma = 0.5
-    alpha = 0.3
+    alpha = 0.4
     next_max_q = max(q_table[next_state])
     q_table[state,action] = (1 - alpha) * q_table[state,action] + alpha * (reward + gamma * next_max_q)
     return q_table
@@ -51,7 +51,7 @@ def run():
             s_state = car.get_sense()
             done = car.checck_done(car.get_sense())
             if sum(v_state) == 0:
-                reward = -0.5
+                reward = -0.75
             elif not done:
                 reward = 0.05
             else:
@@ -64,16 +64,21 @@ def run():
             q_table = update_Qtable(q_table,state,action,reward,next_state)
             action = decide_action(next_state,episode,q_table)
             state = next_state
-            if learining_is_done:
+            if learining_is_done or episode % 1000 == 0:
                 car.plot_state()
+                field.plot_normal_field_line(plt)
+                car.path_plot(plt)
+                plt.draw()
+                plt.pause(0.001)
             
             if done:
                 reward_ave = np.hstack((reward_ave[1:],level))
                 print("episode %5d, reward %5d, step %5d, x:%5d, y:%5d, level %d" %(episode+1,reward_of_episode,i+1,car.pos_x,car.pos_y,level))
-                if learining_is_done == 1:
-                    field.plot_normal_field_line(plt)
-                    car.path_plot(plt)
-                    plt.show()
+                if learining_is_done == 1 or episode % 1000 == 0:
+                    # field.plot_normal_field_line(plt)
+                    # car.path_plot(plt)
+                    # plt.show()
+                    plt.clf()
                 break
 
 
