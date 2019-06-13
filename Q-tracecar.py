@@ -22,27 +22,31 @@ def decide_action(next_state,episode,q_table):
     return next_action
 
 def update_Qtable(q_table,state,action,reward,next_state):
-    gamma = 0.75
+    gamma = 0.70
     alpha = 0.5
     next_max_q = max(q_table[next_state])
     q_table[state,action] = (1 - alpha) * q_table[state,action] + alpha * (reward + gamma * next_max_q)
     return q_table
 
 def update_reward(v_state,s_state,done,level):
+        reward = 0
+        if sum(v_state) <= 0:
+            reward += -10 
         if sum(v_state)/2 < 1:
-            reward = -5
-        elif s_state[0] or s_state[3]:
-            reward = -0.25
+            reward += -1
+        if s_state[0] or s_state[3]:
+            reward += -1
         elif not done:
-            reward = 0.05
+            reward += 1 
         elif done and level == 8:
-            reward = 30
+            reward += 100
         else:
-            reward = -10
+            reward = -100
         return reward
 
 
 def run():
+    legend_flag = False
     max_episode = 10000
     step_by_episode = 5000
     goal_ave = 7
@@ -78,12 +82,16 @@ def run():
                 car.plot_state()
                 field.plot_normal_field_line(plt)
                 car.path_plot(plt)
+                if not legend_flag:
+                    plt.legend()
+                    legend_flag = True
                 plt.draw()
                 plt.pause(0.00001)
             
             if done:
+                legend_flag = False
                 reward_ave = np.hstack((reward_ave[1:],level))
-                print("episode %5d, reward %5d, step %5d, x:%5d, y:%5d, level %d" %(episode+1,reward_of_episode,i+1,car.pos_x,car.pos_y,level))
+                print("episode %5d, reward %6d, step %5d, x:%5d, y:%5d, level %d" %(episode+1,reward_of_episode,i+1,car.pos_x,car.pos_y,level))
                 # if learining_is_done == 1 or episode % 1000 == 0:
                 if learining_is_done == 1 :
                     plt.close()
