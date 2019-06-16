@@ -28,26 +28,34 @@ def update_Qtable(q_table,state,action,reward,next_state):
     q_table[state,action] = (1 - alpha) * q_table[state,action] + alpha * (reward + gamma * next_max_q)
     return q_table
 
+#TODO adjustment
 def update_reward(v_state,s_state,done,level):
         reward = 0
-        if sum(v_state) <= 0:
-            reward += -10 
-        if sum(v_state)/2 < 1:
-            reward += -1
+        # if sum(v_state) <= 0:
+        #     reward += -10 
+        # elif sum(v_state)/2 < 2:
+        #     reward += -1
         if s_state[0] or s_state[3]:
-            reward += -1
+            reward = 0
+        # if not done:
+        #     reward += 0.5 
+        # elif done and level == 8:
+        #     reward += 500
+        # else:
+        #     reward = -100
+        # return reward
         elif not done:
-            reward += 1 
-        elif done and level == 8:
-            reward += 100
+            reward = round(sum(v_state))   
+        elif done and level > 5:
+            reward = 100 * level
         else:
-            reward = -100
+            reward = -99
         return reward
 
 
 def run():
     legend_flag = False
-    max_episode = 10000
+    max_episode = 100000
     step_by_episode = 5000
     goal_ave = 7
     review_num = 10
@@ -77,7 +85,7 @@ def run():
             q_table = update_Qtable(q_table,state,action,reward,next_state)
             action = decide_action(next_state,episode,q_table)
             state = next_state
-            # if learining_is_done or episode % 1000 == 0:
+            # if learining_is_done or episode % 3000 == 0:
             if learining_is_done:
                 car.plot_state()
                 field.plot_normal_field_line(plt)
@@ -92,7 +100,7 @@ def run():
                 legend_flag = False
                 reward_ave = np.hstack((reward_ave[1:],level))
                 print("episode %5d, reward %6d, step %5d, x:%5d, y:%5d, level %d" %(episode+1,reward_of_episode,i+1,car.pos_x,car.pos_y,level))
-                # if learining_is_done == 1 or episode % 1000 == 0:
+                #if learining_is_done == 1 or episode % 3000 == 0:
                 if learining_is_done == 1 :
                     plt.close()
                 break
