@@ -5,6 +5,39 @@ import field
 from collections import deque
 import csv
 
+BLACK     = '\033[30m'
+RED       = '\033[31m'
+GREEN     = '\033[32m'
+YELLOW    = '\033[33m'
+BLUE      = '\033[34m'
+PURPLE    = '\033[35m'
+CYAN      = '\033[36m'
+WHITE     = '\033[37m'
+END       = '\033[0m'
+BOLD      = '\033[1m'
+UNDERLINE = '\033[4m'
+def Color(num):
+    if num == 0:
+        return BLACK
+    elif num == 1:
+        return WHITE
+    elif num == 2:
+        return BOLD
+    elif num == 3:
+        return CYAN
+    elif num == 4:
+        return PURPLE
+    elif num == 5:
+        return BLUE
+    elif num == 6:
+        return GREEN
+    elif num == 7:
+        return YELLOW
+    elif num == 8:
+        return RED
+    else :
+        return UNDERLINE
+
 def get_state(car,s_state,v_state):
     state = [i != 0 for i in s_state]
     state.extend([car.mtrL,car.mtrR])
@@ -22,7 +55,7 @@ def decide_action(next_state,episode,q_table):
     return next_action
 
 def update_Qtable(q_table,state,action,reward,next_state):
-    gamma = 0.70
+    gamma = 0.8
     alpha = 0.5
     next_max_q = max(q_table[next_state])
     q_table[state,action] = (1 - alpha) * q_table[state,action] + alpha * (reward + gamma * next_max_q)
@@ -31,38 +64,69 @@ def update_Qtable(q_table,state,action,reward,next_state):
 #TODO adjustment
 def update_reward(v_state,s_state,done,level):
         reward = 0
-        # if sum(v_state) <= 0:
-        #     reward += -10 
-        # elif sum(v_state)/2 < 2:
-        #     reward += -1
+#0610
+        if sum(v_state) <= 0:
+            reward += -10 
+        if sum(v_state)/2 < 1:
+            reward += -1
         if s_state[0] or s_state[3]:
-            reward = 0
-        # if not done:
-        #     reward += 0.5 
-        # elif done and level == 8:
-        #     reward += 500
-        # else:
-        #     reward = -100
-        # return reward
+            reward += -1
         elif not done:
-            reward = round(sum(v_state))   
-        elif done and level > 5:
-            reward = 100 * level
+            reward += 1 
+        elif done and level == 8:
+            reward += 500
         else:
-            reward = -99
+            reward = -100
+
+#0613
+        # if sum(v_state)/2 < 1:
+        #     reward = -5
+        # elif s_state[0] or v_state[1]:
+        #     reward = -0.25
+        # elif not done:
+        #     reward = 0.05
+        # elif done and level == 8:
+        #     reward = 30
+        # else:
+        #     reward = -99
+
+#0616
+        # if episode+1 == 3000:
+        #     reward = -99
+        # if s_state[0] or s_state[3]:
+        #     reward = -0.05
+        # elif not done:
+        #     reward = round(sum(v_state))*level   
+        # elif done and level > 3:
+        #     reward = 100 * level
+        # else:
+        #     reward = -99
+#0617
+        # if s_state[0] or s_state[3]:
+        #     reward = 0
+        # elif not done and sum(v_state) > 3:
+        #     reward = sum(v_state)/10  
+        # elif done :
+        #     if level == 8:
+        #         reward = 500
+        #     else:
+        #         reward = -50
         return reward
 
 
 def run():
     legend_flag = False
-    max_episode = 100000
-    step_by_episode = 5000
+    max_episode = 10000
+    step_by_episode = 1500
     goal_ave = 7
     review_num = 10
     reward_of_episode = 0
     reward_ave = np.full(review_num,0)
     learining_is_done = False
     q_table = np.random.uniform(low=-1,high=1,size=(2**4 * (line_trace_car.car_order[1]-line_trace_car.car_order[0]+1) ** 2 , line_trace_car.action_space))
+    transition_data = [] 
+    x_axis = []
+    np.random.seed(0)
     for episode in range(max_episode):
         level = 0
         car=line_trace_car(field.n_line)
@@ -93,23 +157,33 @@ def run():
                 if not legend_flag:
                     plt.legend()
                     legend_flag = True
-                plt.draw()
-                plt.pause(0.00001)
+                #plt.draw()
+                #plt.pause(0.00001)
             
             if done:
                 legend_flag = False
                 reward_ave = np.hstack((reward_ave[1:],level))
-                print("episode %5d, reward %6d, step %5d, x:%5d, y:%5d, level %d" %(episode+1,reward_of_episode,i+1,car.pos_x,car.pos_y,level))
+                print(Color(level),end="")
+                print("episode %5d, reward %6d, step %5d, x:%5d, y:%5d, level %d, reward_ave %f" %(episode+1,reward_of_episode,i+1,car.pos_x,car.pos_y,level,reward_ave.mean()))
+                print(END,end="")
+                transition_data.append(level)
+                x_axis.append(episode)
                 #if learining_is_done == 1 or episode % 3000 == 0:
                 if learining_is_done == 1 :
-                    plt.close()
-                break
+                    plt.show()
+                    #plt.close()
+                break 
 
 
-        if (reward_ave.mean() >= goal_ave):
-            print("Episode %d train agent successfuly!" % episode)
+        if (reward_ave.mean() >= goal_ave) or  episode+1 == max_episode:
+            print("Episode %d train agent fin!" %(episode+1))
             with open('./csv/file.csv', 'wt') as f:
                 writer = csv.writer(f)
                 writer.writerows(q_table)
+            print("saved")
+            with open('./csv/transition_data.csv', 'wt') as f:
+                writer = csv.writer(f)
+                data = np.c_[x_axis,transition_data]
+                writer.writerows(data)
             learining_is_done = 1
 run()
