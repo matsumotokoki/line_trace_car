@@ -56,7 +56,7 @@ def decide_action(next_state,episode,q_table):
 
 def update_Qtable(q_table,state,action,reward,next_state):
     gamma = 0.8
-    alpha = 0.5
+    alpha = 0.4
     next_max_q = max(q_table[next_state])
     q_table[state,action] = (1 - alpha) * q_table[state,action] + alpha * (reward + gamma * next_max_q)
     return q_table
@@ -65,18 +65,18 @@ def update_Qtable(q_table,state,action,reward,next_state):
 def update_reward(v_state,s_state,done,level):
         reward = 0
 #0610
-        if sum(v_state) <= 0:
-            reward += -10 
-        if sum(v_state)/2 < 1:
-            reward += -1
-        if s_state[0] or s_state[3]:
-            reward += -1
-        elif not done:
-            reward += 1 
-        elif done and level == 8:
-            reward += 500
-        else:
-            reward = -100
+        # if sum(v_state) <= 0:
+        #     reward += -10 
+        # if sum(v_state)/2 < 1:
+        #     reward += -1
+        # if s_state[0] or s_state[3]:
+        #     reward += -1
+        # elif not done:
+        #     reward += 1 
+        # elif done and level == 8:
+        #     reward += 500
+        # else:
+        #     reward = -100
 
 #0613
         # if sum(v_state)/2 < 1:
@@ -110,13 +110,32 @@ def update_reward(v_state,s_state,done,level):
         #     if level == 8:
         #         reward = 500
         #     else:
-        #         reward = -50
-        return reward
+        #         reward = -99
+#0624
+        # if s_state[0] or s_state[3]:
+        #     reward = -5
+        # elif not done and sum(v_state) > 3:
+        #     reward = sum(v_state)/10  
+        # elif done and level<8:
+        #     reward = -99
 
+#0626
+        if sum(v_state)/2 <= 1:
+            reward = -1 
+        elif s_state[0] or s_state[3]:
+            reward += -0.1
+        elif not done:
+            reward += level 
+        elif done and level == 8:
+            reward += 500
+        else:
+            reward = -10
+
+        return reward
 
 def run():
     legend_flag = False
-    max_episode = 10000
+    max_episode = 50000
     step_by_episode = 1500
     goal_ave = 7
     review_num = 10
@@ -157,8 +176,9 @@ def run():
                 if not legend_flag:
                     plt.legend()
                     legend_flag = True
-                #plt.draw()
-                #plt.pause(0.00001)
+                # plt.axes().set_aspect('equal')
+                # plt.draw()
+                # plt.pause(0.00001)
             
             if done:
                 legend_flag = False
@@ -166,12 +186,13 @@ def run():
                 print(Color(level),end="")
                 print("episode %5d, reward %6d, step %5d, x:%5d, y:%5d, level %d, reward_ave %f" %(episode+1,reward_of_episode,i+1,car.pos_x,car.pos_y,level,reward_ave.mean()))
                 print(END,end="")
-                transition_data.append(level)
+                transition_data.append(reward_ave.mean())
                 x_axis.append(episode)
                 #if learining_is_done == 1 or episode % 3000 == 0:
                 if learining_is_done == 1 :
+                    plt.axes().set_aspect('equal')
                     plt.show()
-                    #plt.close()
+                    # plt.close()
                 break 
 
 
