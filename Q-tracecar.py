@@ -64,60 +64,6 @@ def update_Qtable(q_table,state,action,reward,next_state):
 #TODO adjustment
 def update_reward(v_state,s_state,done,level):
         reward = 0
-#0610
-        # if sum(v_state) <= 0:
-        #     reward += -10 
-        # if sum(v_state)/2 < 1:
-        #     reward += -1
-        # if s_state[0] or s_state[3]:
-        #     reward += -1
-        # elif not done:
-        #     reward += 1 
-        # elif done and level == 8:
-        #     reward += 500
-        # else:
-        #     reward = -100
-
-#0613
-        # if sum(v_state)/2 < 1:
-        #     reward = -5
-        # elif s_state[0] or v_state[1]:
-        #     reward = -0.25
-        # elif not done:
-        #     reward = 0.05
-        # elif done and level == 8:
-        #     reward = 30
-        # else:
-        #     reward = -99
-
-#0616
-        # if episode+1 == 3000:
-        #     reward = -99
-        # if s_state[0] or s_state[3]:
-        #     reward = -0.05
-        # elif not done:
-        #     reward = round(sum(v_state))*level   
-        # elif done and level > 3:
-        #     reward = 100 * level
-        # else:
-        #     reward = -99
-#0617
-        # if s_state[0] or s_state[3]:
-        #     reward = 0
-        # elif not done and sum(v_state) > 3:
-        #     reward = sum(v_state)/10  
-        # elif done :
-        #     if level == 8:
-        #         reward = 500
-        #     else:
-        #         reward = -99
-#0624
-        # if s_state[0] or s_state[3]:
-        #     reward = -5
-        # elif not done and sum(v_state) > 3:
-        #     reward = sum(v_state)/10  
-        # elif done and level<8:
-        #     reward = -99
 
 #0626
         if sum(v_state)/2 <= 1:
