@@ -55,8 +55,8 @@ def decide_action(next_state,episode,q_table):
     return next_action
 
 def update_Qtable(q_table,state,action,reward,next_state):
-    gamma = 0.8
-    alpha = 0.4
+    gamma = 0.9
+    alpha = 0.75
     next_max_q = max(q_table[next_state])
     q_table[state,action] = (1 - alpha) * q_table[state,action] + alpha * (reward + gamma * next_max_q)
     return q_table
@@ -81,11 +81,12 @@ def update_reward(v_state,s_state,done,level):
 
 def run():
     legend_flag = False
-    max_episode = 50000
+    max_episode = 10000
     step_by_episode = 1500
-    goal_ave = 7
-    review_num = 10
+    goal_ave = 8.0
+    review_num = 20
     reward_of_episode = 0
+    goal_times = 0
     reward_ave = np.full(review_num,0)
     learining_is_done = False
     q_table = np.random.uniform(low=-1,high=1,size=(2**4 * (line_trace_car.car_order[1]-line_trace_car.car_order[0]+1) ** 2 , line_trace_car.action_space))
@@ -127,6 +128,8 @@ def run():
                 # plt.pause(0.00001)
             
             if done:
+                if level== 8:
+                    goal_times+=1
                 legend_flag = False
                 reward_ave = np.hstack((reward_ave[1:],level))
                 print(Color(level),end="")
@@ -138,12 +141,11 @@ def run():
                 if learining_is_done == 1 :
                     plt.axes().set_aspect('equal')
                     plt.show()
-                    # plt.close()
                 break 
-
 
         if (reward_ave.mean() >= goal_ave) or  episode+1 == max_episode:
             print("Episode %d train agent fin!" %(episode+1))
+            print("goal_times: "+str(goal_times))
             with open('./csv/file.csv', 'wt') as f:
                 writer = csv.writer(f)
                 writer.writerows(q_table)

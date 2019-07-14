@@ -72,4 +72,3 @@ class line_trace_car(object):
         plt.plot(self.car_pos[0],self.car_pos[1],label="car_pos")
         for i in range(len(self.sensors)):
             plt.plot(self.sensor_pos[i][0],self.sensor_pos[i][1],label="sensor"+str(i+1))
-            

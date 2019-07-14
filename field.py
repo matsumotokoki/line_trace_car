@@ -43,3 +43,6 @@ def plot_normal_field_line(plt):
     plt.plot(nplot_x1,nplot_y1,color="black")
     plt.plot(nplot_x2,nplot_y2,color="black")
 
+plot_normal_field_line(plt)
+plt.axes().set_aspect('equal')
+plt.show()
