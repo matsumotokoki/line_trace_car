@@ -56,7 +56,7 @@ def decide_action(next_state,episode,q_table):
 
 def update_Qtable(q_table,state,action,reward,next_state):
     gamma = 0.9
-    alpha = 0.75
+    alpha = 0.1
     next_max_q = max(q_table[next_state])
     q_table[state,action] = (1 - alpha) * q_table[state,action] + alpha * (reward + gamma * next_max_q)
     return q_table
