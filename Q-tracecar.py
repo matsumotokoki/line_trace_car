@@ -56,7 +56,7 @@ def decide_action(next_state,episode,q_table):
 
 def update_Qtable(q_table,state,action,reward,next_state):
     gamma = 0.9
-    alpha = 0.1
+    alpha = 0.80
     next_max_q = max(q_table[next_state])
     q_table[state,action] = (1 - alpha) * q_table[state,action] + alpha * (reward + gamma * next_max_q)
     return q_table
@@ -68,7 +68,7 @@ def update_reward(v_state,s_state,done,level):
 #0626
         if sum(v_state)/2 <= 1:
             reward = -1 
-        elif s_state[0] or s_state[3]:
+        if s_state[0] or s_state[3]:
             reward += -0.1
         elif not done:
             reward += level 
@@ -84,7 +84,7 @@ def run():
     max_episode = 10000
     step_by_episode = 1500
     goal_ave = 8.0
-    review_num = 20
+    review_num = 10
     reward_of_episode = 0
     goal_times = 0
     reward_ave = np.full(review_num,0)
@@ -123,9 +123,9 @@ def run():
                 if not legend_flag:
                     plt.legend()
                     legend_flag = True
-                # plt.axes().set_aspect('equal')
-                # plt.draw()
-                # plt.pause(0.00001)
+                plt.axes().set_aspect('equal')
+                plt.draw()
+                plt.pause(0.00001)
             
             if done:
                 if level== 8:
