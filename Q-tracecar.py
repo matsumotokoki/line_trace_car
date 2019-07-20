@@ -5,6 +5,7 @@ import field
 from collections import deque
 import csv
 
+#color def 
 BLACK     = '\033[30m'
 RED       = '\033[31m'
 GREEN     = '\033[32m'
@@ -64,8 +65,6 @@ def update_Qtable(q_table,state,action,reward,next_state):
 #TODO adjustment
 def update_reward(v_state,s_state,done,level):
         reward = 0
-
-#0626
         if sum(v_state)/2 <= 1:
             reward = -1 
         if s_state[0] or s_state[3]:
