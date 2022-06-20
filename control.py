@@ -30,7 +30,7 @@ def get_action(car,state):
 
 
 def main():
-    num_episodes = 100
+    num_episodes = 10
     max_steps = 50000
     total_steps  = 0
     goal_level = 8 
@@ -64,6 +64,7 @@ def main():
 
         if islearned:
             if done > 0 or episode+1 == num_episodes:
+                plt.axes().set_aspect('equal')
                 car.path_plot(plt)
                 field.plot_normal_field_line(plt)
                 plt.legend(loc="lower right")
